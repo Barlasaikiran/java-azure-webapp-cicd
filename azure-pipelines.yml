@@ -30,17 +30,21 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'init'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
               backendServiceArm: '$(serviceConnection)'
               backendAzureRmResourceGroupName: 'backendRg'
               backendAzureRmStorageAccountName: 'javastorage2002'
               backendAzureRmContainerName: 'javac2002'
               backendAzureRmKey: 'java.terraform.tfstate'
-   
+            
+          
           - task: TerraformTask@5
             inputs:
               provider: 'azurerm'
               command: 'apply'
-              environmentServiceNameAzureRM: '$(serviceConnection)'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+              commandOptions: '-auto-approve'
+   
 
 
           
