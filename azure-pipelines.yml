@@ -19,7 +19,7 @@ stages:
       - job: TerraformInfraCreation
 
         pool:
-          vmImage: ${(vmImage)
+          vmImage: $(vmImage)
         
         steps:
           - task: TerraformInstaller@1
