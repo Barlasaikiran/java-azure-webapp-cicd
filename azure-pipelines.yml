@@ -3,9 +3,13 @@ trigger:
 
 
 variables:
-    serviceConnection: "HDFC-Manual"
-    name: vmImage
-    value: "ubuntu-latest"
+    serviceConnection: HDFC-Manual   
+    vmImage: 'ubuntu-latest'
+    backendServiceArm: '$(serviceConnection)'
+    backendAzureRmResourceGroupName: 'backendRg'
+    backendAzureRmStorageAccountName: 'javastorage2002'
+    backendAzureRmContainerName: 'javac2002'
+    backendAzureRmKey: 'java.terraform.tfstate'
 
 stages:
   - stage: Terraform
@@ -15,20 +19,28 @@ stages:
       - job: TerraformInfraCreation
 
         pool:
-          vmImage: ${name} 
+          vmImage: ${(vmImage)
         
         steps:
           - task: TerraformInstaller@1
             inputs:
               terraformVersion: 'latest'
+          
           - task: TerraformTask@5
             inputs:
               provider: 'azurerm'
               command: 'init'
-              backendServiceArm: 'HDFC-Manual'
+              backendServiceArm: '$(serviceConnection)'
+              backendAzureRmResourceGroupName: 'backendRg'
+              backendAzureRmStorageAccountName: 'javastorage2002'
+              backendAzureRmContainerName: 'javac2002'
+              backendAzureRmKey: 'java.terraform.tfstate'
+   
           - task: TerraformTask@5
             inputs:
               provider: 'azurerm'
               command: 'apply'
-              environmentServiceNameAzureRM: 'HDFC-Manual'
+              environmentServiceNameAzureRM: '$(serviceConnection)'
 
+
+          
