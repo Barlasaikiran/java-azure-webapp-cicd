@@ -67,7 +67,7 @@ stages:
           - task: JavaToolInstaller@1
             displayName: Java Installer
             inputs:
-              versionSpec: '17'
+              versionSpec: '21'
               jdkArchitectureOption: 'x64'
               jdkSourceOption: 'PreInstalled'
 
