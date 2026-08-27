@@ -57,8 +57,9 @@ stages:
 
     jobs:
       - job: BuildJob
-        pool: $(vmImage)
-        condition: succeeded()
+        pool:
+          vmImage: $(vmImage)
+          condition: succeeded()
 
         steps:
           - checkout: self
