@@ -22,6 +22,8 @@ stages:
           vmImage: $(vmImage)
         
         steps:
+
+          - checkout: self
           - task: TerraformInstaller@1
             inputs:
               terraformVersion: 'latest'
@@ -43,11 +45,58 @@ stages:
             displayName: Terraform Apply
             inputs:
               provider: 'azurerm'
-           #   command: 'apply'
-              command: destroy
+              command: 'apply'
+           #  command: destroy
               workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
               environmentServiceNameAzureRM: $(serviceConnection)
               commandOptions: '-auto-approve'
+  
+  - stage: JavaBuild
+    dependsOn: Terraform
+    displayName: Build java application
+
+    jobs:
+      - job: BuildJob
+        pool: $(vmImage)
+
+        steps:
+          - checkout: self
+
+          - task: JavaToolInstaller@1
+            displayName: Java Installer
+            inputs:
+              versionSpec: '17'
+              jdkArchitectureOption: 'x64'
+              jdkSourceOption: 'PreInstalled'
+
+          - task: Maven@4
+            displayName: Maven Installer
+            inputs:
+              azureSubscription: $(serviceConnection)
+              mavenPomFile: 'pom.xml'
+              options: 'clean package -DskipTests'
+              publishJUnitResults: false
+              javaHomeOption: 'JDKVersion'
+              mavenVersionOption: 'Default'
+              mavenAuthenticateFeed: false
+              effectivePomSkip: false
+              sonarQubeRunAnalysis: false
+
+          
+          - task: PublishBuildArtifacts@1
+            displayName: Publish into Java Artifact
+            inputs:
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)/target'
+              ArtifactName: 'java-artifact'
+              publishLocation: 'Container'
+          
+            
+          
+          
+
+
+
+
 
    
 
