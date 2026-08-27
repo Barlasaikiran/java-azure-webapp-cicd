@@ -88,8 +88,8 @@ stages:
           - task: PublishBuildArtifacts@1
             displayName: Publish into Java Artifact
             inputs:
-              PathtoPublish: '$(Build.ArtifactStagingDirectory)/target'
-              ArtifactName: 'java-artifact'
+              PathtoPublish: 'System.DefaultWorkingDirectory'
+              ArtifactName: 'java-artifcat'
               publishLocation: 'Container'
           
             
